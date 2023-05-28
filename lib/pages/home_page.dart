@@ -4,6 +4,7 @@ import 'package:tf09c_0026_marvel_heroes_app/model/character_list.dart';
 import 'package:tf09c_0026_marvel_heroes_app/pages/core/Networking.dart';
 import 'package:tf09c_0026_marvel_heroes_app/services/character_service.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -60,6 +61,18 @@ class _HomePageState extends State<HomePage> {
       body: PagedListView<int, Character>(
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate(
+          firstPageProgressIndicatorBuilder: (context) {
+            return const SpinKitPouringHourGlassRefined(
+              color: Colors.red,
+              size: 80,
+            );
+          },
+          newPageProgressIndicatorBuilder: (context) {
+            return const SpinKitWaveSpinner(
+              color: Colors.red,
+              size: 80,
+            );
+          },
           itemBuilder: (context, character, index) {
             return ListTile(
               leading: CircleAvatar(
