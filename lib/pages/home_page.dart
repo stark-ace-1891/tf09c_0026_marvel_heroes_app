@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late CharacterList? characterList;
+  CharacterList? characterList;
 
   @override
   void initState() {
@@ -23,9 +23,13 @@ class _HomePageState extends State<HomePage> {
   Future<void> callHeroes() async {
     // final network = Networking();
     // final data = await network.get(operationPath: '/v1/public/characters');
-    final characterService = CharacterService();
-    characterList = await characterService.getCharacters();
-    setState(() {});
+    try {
+      final characterService = CharacterService();
+      characterList = await characterService.getCharacters();
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
