@@ -30,23 +30,18 @@ class Networking {
     Map<String, dynamic>? params,
   }) async {
     Map<String, dynamic> queryParams = {};
-    try {
-      final key = _getApiKeys();
-      if (params != null) {
-        queryParams.addAll(params);
-        queryParams.addAll(key);
-      } else {
-        queryParams.addAll(key);
-      }
-      final response = await dio.get(
-        operationPath,
-        queryParameters: queryParams,
-      );
-      return response.data;
-    } catch (e) {
-      print(e);
-      return {};
+    final key = _getApiKeys();
+    if (params != null) {
+      queryParams.addAll(params);
+      queryParams.addAll(key);
+    } else {
+      queryParams.addAll(key);
     }
+    final response = await dio.get(
+      operationPath,
+      queryParameters: queryParams,
+    );
+    return response.data;
   }
 
   // Future<Map<String, dynamic>> post(
