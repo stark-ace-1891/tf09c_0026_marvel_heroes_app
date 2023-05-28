@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tf09c_0026_marvel_heroes_app/model/character.dart';
 import 'package:tf09c_0026_marvel_heroes_app/model/character_list.dart';
 import 'package:tf09c_0026_marvel_heroes_app/pages/core/Networking.dart';
 import 'package:tf09c_0026_marvel_heroes_app/services/character_service.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,48 +13,70 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late CharacterList? characterList;
+  // late CharacterList? characterList;
+  final PagingController<int, Character> _pagingController =
+      PagingController(firstPageKey: 1);
 
   @override
   void initState() {
     // TODO: implement initState
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
     super.initState();
-    callHeroes();
+    // callHeroes();
   }
 
-  Future<void> callHeroes() async {
-    // final network = Networking();
-    // final data = await network.get(operationPath: '/v1/public/characters');
+  Future<void> _fetchPage(int pageKey) async {
+    const pageSize = 15;
     final characterService = CharacterService();
-    characterList = await characterService.getCharacters();
+    final offset = (pageKey - 1) * pageSize;
+    final newItems =
+        await characterService.getCharacters(offset: offset, limit: pageSize);
+    final isLastPage = newItems.result.length < pageSize;
+    if (isLastPage) {
+      _pagingController.appendLastPage(newItems.result);
+    } else {
+      final newPage = pageKey + 1;
+      _pagingController.appendPage(newItems.result, newPage);
+    }
     setState(() {});
   }
 
+  // Future<void> callHeroes() async {
+  //   // final network = Networking();
+  //   // final data = await network.get(operationPath: '/v1/public/characters');
+  //   final characterService = CharacterService();
+  //   characterList = await characterService.getCharacters(offset: 20);
+  //   setState(() {});
+  // }
+
   @override
   Widget build(BuildContext context) {
-    if (characterList != null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text("Marvel Heroes"),
-        ),
-        body: ListView.builder(
-          itemCount: characterList!.result.length,
-          itemBuilder: (context, index) {
-            final characterItem = characterList!.result[index];
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Marvel Heroes"),
+      ),
+      body: PagedListView<int, Character>(
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate(
+          itemBuilder: (context, character, index) {
             return ListTile(
-              title: Text(characterItem.name),
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(characterItem.thumbnail),
+                backgroundImage: NetworkImage(character.thumbnail),
               ),
+              title: Text(character.name),
             );
           },
         ),
-      );
-    }
-    return Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
       ),
     );
+    // if (characterList != null) {
+    // }
+    // return Scaffold(
+    //   body: Center(
+    //     child: CircularProgressIndicator(),
+    //   ),
+    // );
   }
 }
