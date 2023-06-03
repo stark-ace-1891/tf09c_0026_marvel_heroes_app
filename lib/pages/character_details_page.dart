@@ -36,6 +36,7 @@ class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Details"),
+        // automaticallyImplyLeading: false,  //Oculta flecha atras
       ),
       body: FutureBuilder(
         future: service.getCharacterDetails(characterId: widget.id),
