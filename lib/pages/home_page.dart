@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tf09c_0026_marvel_heroes_app/model/character.dart';
 import 'package:tf09c_0026_marvel_heroes_app/model/character_list.dart';
+import 'package:tf09c_0026_marvel_heroes_app/pages/character_details_page.dart';
 import 'package:tf09c_0026_marvel_heroes_app/pages/core/Networking.dart';
 import 'package:tf09c_0026_marvel_heroes_app/services/character_service.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -79,6 +80,11 @@ class _HomePageState extends State<HomePage> {
                 backgroundImage: NetworkImage(character.thumbnail),
               ),
               title: Text(character.name),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return CharacterDetailsPage(id: character.id);
+                }));
+              },
             );
           },
         ),
