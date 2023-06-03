@@ -1,19 +1,20 @@
 class CharacterDetails {
   final String name;
   final String thumbnail;
-  final String? description;
+  final String description;
   final List<String> comics;
 
   CharacterDetails({
     required this.name,
     required this.thumbnail,
     required this.comics,
-    this.description,
+    required this.description,
   });
   factory CharacterDetails.fromJson(Map<String, dynamic> json) {
     final result = json['results'][0];
     return CharacterDetails(
       name: result['name'],
+      description: result['description'],
       thumbnail:
           "${result['thumbnail']['path']}.${result['thumbnail']['extension']}",
       comics: List<String>.from(
