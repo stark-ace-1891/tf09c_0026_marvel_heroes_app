@@ -44,12 +44,12 @@ class Networking {
     return response.data;
   }
 
-  // Future<Map<String, dynamic>> post(
-  //     {required String operationPath, Map<String, dynamic>? params}) async {
-  //   final response = await dio.post(
-  //     operationPath,
-  //     data: params,
-  //   );
-  //   return response.data;
-  // }
+  Future<Map<String, dynamic>> post(
+      {required String operationPath, Map<String, dynamic>? params}) async {
+    final response = await dio.post(
+      operationPath,
+      data: params,
+    );
+    return response.data;
+  }
 }
